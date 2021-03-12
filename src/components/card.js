@@ -1,4 +1,30 @@
+import axios from "axios";
+
 const Card = (article) => {
+  const cardDiv = document.createElement("div");
+  const headline = document.createElement("div");
+  const author = document.createElement("div");
+  const imgDiv = document.createElement("div");
+  const img = document.createElement("img");
+  const authorName = document.createElement("span");
+
+  cardDiv.classList.add("card");
+  headline.classList.add("headline");
+  author.classList.add("author");
+  imgDiv.classList.add("img-container");
+
+  headline.textContent = article.headline
+  img.src=article.authorPhoto;
+  authorName.textContent = article.authorName;
+
+  cardDiv.appendChild(headline);
+  cardDiv.appendChild(author);
+  author.appendChild(imgDiv);
+  imgDiv.appendChild(img);
+  author.appendChild(authorName)
+
+  return cardDiv;
+  
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -20,6 +46,21 @@ const Card = (article) => {
 }
 
 const cardAppender = (selector) => {
+  axios
+    .get("https://lambda-times-api.herokuapp.com/articles")
+    .then(res => {
+      const topics = Object.getOwnPropertyNames(res.data.articles);
+      console.log(topics)
+      topics.forEach(topic => {
+        const article = Card(res.data.articles.topic)
+        const card = Card(article)
+        selector.appendChild(card)
+      })
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
   // TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
